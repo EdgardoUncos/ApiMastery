@@ -1,0 +1,83 @@
+﻿@model ClienteAPI.Models.OrderVM
+
+@{
+    ViewData["Title"] = "NewOrder";
+}
+
+<h1>NewOrder</h1>
+
+<h4>New Order</h4>
+<hr />
+
+<div class="card">
+    <div class="card-header">
+        Pedido
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="form-label" asp-for="Client.Id">Id Cliente</label>
+                <input class="form-control form-control-sm" type="text" asp-for="Client.Id" disabled="true">
+            </div>
+
+            <div class="col-sm-4">
+                <label class="form-label" asp-for="Client.FirstName">Nombre</label>
+                <input class="form-control form-control-sm" type="text" asp-for=Client.FirstName id="txtnombre">
+            </div>
+            <div class="col-sm-4">
+                <label class="form-label">Apellido</label>
+                <input class="form-control form-control-sm" asp-for="Client.LastName" type="text" id="txtapellido">
+            </div>
+        </div>
+        <hr />
+        <div class="row align-items-end">
+            <div class="col-sm-3">
+                <label class="form-label">Producto</label>
+                @* <select id="txtproducto" asp-items="@Productos" class="form-select"></select> *@
+                <input class="form-control form-control-sm" type="text" id="">
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label">Precio</label>
+                <input class="form-control form-control-sm" type="text" id="txtprecio">
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label">Cantidad</label>
+                <input class="form-control form-control-sm" type="text" id="txtcantidad">
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-success btn-sm" id="btnAgregar">Agregar</button>
+                <button class="btn btn-primary btn-sm" id="btnTerminar">Cerrar Pedido</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-sm" id="tbProducto">
+                    <thead>
+                        <tr class="table-dark">
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
