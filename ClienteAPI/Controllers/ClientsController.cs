@@ -1,4 +1,4 @@
-﻿using ApiMastery.Models;
+﻿using ClienteAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 

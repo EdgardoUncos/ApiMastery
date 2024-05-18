@@ -1,7 +1,7 @@
-﻿using ApiMastery.Models;
+﻿using ClienteAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ApiMastery.Models;
+
 
 namespace ClienteAPI.Controllers
 {

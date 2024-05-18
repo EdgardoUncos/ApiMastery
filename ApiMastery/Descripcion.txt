@@ -1,0 +1,21 @@
+﻿OrderController
+
+	++ EndPoint Get ++
+	El metodo retorna una lista de ordenes, lo particular es que agrega los detalles (include)
+
+	++ EndPoint GetDetails(int id) ++
+	Nos devuelve una orden de la tabla por id, incluye los detalles.
+	Retorna un Ok(order)
+
+	++ EndPoint Post(Order order) ++
+	Endpoint que guarda una orden realizada, primero guarda la Orden, luego guarda los detalles, finalmente impacta los resultados con SaveChanges
+
+	++Metodo Delete++
+	Recibe la orden a borrar, busca la orden por id y hace un include de OrderDetails(prop de navegacion)
+	Primero remueve las ordenes de detalles y luego remueve la orden. Retorna NoContent
+
+	++ EndPoint Put Put(Order order) (seria una modificacion)++
+	Recibe la orden como parametro
+	Buscamos la orden por id y cargamos con un include los detalles(prop de navegacion)
+	Modificamos la orden encontrada con los datos de la orden en parametro.
+	Removemos los detalles de la orden encontrada, actualizamos la orden actual(update), agregamos los detalles y finalmente salvamos los cambios(SaveChanges)

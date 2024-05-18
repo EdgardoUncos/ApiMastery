@@ -1,5 +1,4 @@
-﻿using ApiMastery.Models;
-
+﻿
 namespace ClienteAPI.Models
 {
     public class OrderVM
