@@ -7,6 +7,17 @@ namespace ClienteAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            // Session
+            builder.Services.AddResponseCaching();
+            builder.Services.AddSession(options =>
+            {
+                //options.Cookie.HttpOnly = true;
+                //options.Cookie.IsEssential = true;
+                //options.Cookie.SameSite = SameSiteMode.None;
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+                options.IdleTimeout = TimeSpan.FromHours(1);
+            });
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -22,6 +33,7 @@ namespace ClienteAPI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();

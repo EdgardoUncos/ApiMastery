@@ -20,6 +20,14 @@ namespace ClienteAPI.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var list = JsonConvert.DeserializeObject<List<Order>>(await httpClient.GetStringAsync(urlOrders));
+
+            return View(list);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> NewOrder(int id)
         {
             Order order = new Order();
@@ -59,7 +67,7 @@ namespace ClienteAPI.Controllers
 
             if (result.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return View("Ok");
 
             }
             return View(order);

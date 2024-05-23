@@ -1,20 +1,26 @@
 ﻿using ClienteAPI.Models;
+using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Common;
 
 namespace ClienteAPI.Controllers
 {
     public class ProductCategoryController : Controller
     {
         private readonly string urlCategory;
-        private HttpClient client = new HttpClient();
+        private HttpClient client;
 
         public ProductCategoryController(IConfiguration configuration)
         {
             urlCategory = configuration["EndPoint:UrlProductCategory"];
+                      var client = new HttpClient();
+            
         }
         public async Task<IActionResult> Index()
         {
+            var token = HttpContext.Session.GetString("token");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", token);
             var productCategory = JsonConvert.DeserializeObject<List<ProductCategory>>(await client.GetStringAsync(urlCategory));
             return View(productCategory);
         }
