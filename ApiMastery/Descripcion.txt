@@ -19,3 +19,18 @@
 	Buscamos la orden por id y cargamos con un include los detalles(prop de navegacion)
 	Modificamos la orden encontrada con los datos de la orden en parametro.
 	Removemos los detalles de la orden encontrada, actualizamos la orden actual(update), agregamos los detalles y finalmente salvamos los cambios(SaveChanges)
+
+Verificacion de Email
+
+	Creamos la clase SmtpSettings, contiene las propiedades necesarias para enviar correos de email de verificacion. Las propiedades coinciden con las entradas en appsettings, las claves se guardan mediante
+	secret.
+	Leemos y mapeamos el resultado en un objeto, que queda agregado en el contenedor de dependencias
+		builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+	Instalamos el paquete de nuget MailKit
+	Creamos la clase EmailService. Encargada de enviar el email de verificacion, configurada con los datos de SmtpSettings
+
+	Modificamos el controlador Authentication ya no envia el token directamente, primero tiene que confirmar el email
+		Cuando el usuario se crea enviamos un email de verificacion
+			await SendVerificationEmail(user);
+				Dentre de este metodo se arma la url con los datos que se enviara para confirmar

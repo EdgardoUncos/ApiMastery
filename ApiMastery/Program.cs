@@ -1,6 +1,8 @@
 using ApiMastery.Configuration;
+using ApiMastery.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -20,6 +22,13 @@ namespace ApiMastery
 
             // Leemos el secreto y lo mapeamos en la clase JwtConfig
             builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+            // Leemos el secreto y lo mapeamos en la clase SmtpSettings
+
+            // Email 
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+            builder.Services.AddSingleton<IEmailSender, EmailService>();
+
+            builder.Services.AddTransient<IServicioEmail, ServicioEmailSendGrid>();
 
             // Agregamos la configuracion de Autenticacion
             builder.Services.AddAuthentication(options =>
