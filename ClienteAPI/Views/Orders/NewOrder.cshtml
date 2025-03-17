@@ -65,6 +65,7 @@
                             <th>Precio</th>
                             <th>Cantidad</th>
                             <th>Total</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,7 +110,12 @@
                     $("<td>").text(productoSeleccionado),
                     $("<td>").text(precio.toFixed(2)),
                     $("<td>").text(cantidad),
-                    $("<td>").text(total.toFixed(2))
+                    $("<td>").text(total.toFixed(2)),
+                    $("<td>").append(
+                        $('<a>').attr('href', '/Customers/Edit/' + codigo).text('Edit'),
+                        ' | ',
+                        $('<a>').attr('href', '/Customers/Delete/' + codigo).text('Delete')
+                    )
                 )
             );
 

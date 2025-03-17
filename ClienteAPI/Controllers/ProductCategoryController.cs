@@ -13,7 +13,7 @@ namespace ClienteAPI.Controllers
 
         public ProductCategoryController(IConfiguration configuration)
         {
-            urlCategory = configuration["EndPoint:UrlProductCategory"];
+            urlCategory = configuration["EndPoint:UrlProductCategory"];  // Leemos desde appsetting.json
                       var client = new HttpClient();
             
         }

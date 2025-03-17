@@ -1,6 +1,8 @@
 ﻿using ApiMastery.Auth;
+using ApiMastery.Common;
 using ApiMastery.Configuration;
 using ApiMastery.DTOs;
+using ApiMastery.Models;
 using ApiMastery.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,14 +27,16 @@ namespace ApiMastery.Controllers
         private readonly JwtConfig _jwtConfig;
         private readonly IEmailSender _emailSenser;
         private readonly IServicioEmail _emailSendGrid;
+        private readonly APIFurnitureStoreContext _context;
 
-        public AuthenticationController(UserManager<IdentityUser> userManager, IOptions<JwtConfig> jwtConfig, IEmailSender emailSender, IServicioEmail emailSendGrid)
+        public AuthenticationController(UserManager<IdentityUser> userManager, IOptions<JwtConfig> jwtConfig, 
+                                    IEmailSender emailSender, IServicioEmail emailSendGrid, APIFurnitureStoreContext context)
         {
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
             _emailSenser = emailSender;
             _emailSendGrid = emailSendGrid;
-            
+            _context = context;
         }
 
         [HttpPost("Register")]
@@ -128,7 +132,7 @@ namespace ApiMastery.Controllers
 
             var token = GenerateToken(existingUser);
 
-            return Ok(new AuthResult { Token  = token, Result = true });
+            return Ok(token);
 
         }
 
@@ -156,7 +160,7 @@ namespace ApiMastery.Controllers
             return Ok(status);
         }
 
-        private string GenerateToken(IdentityUser user)
+        private async Task<AuthResult> GenerateToken(IdentityUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -173,13 +177,34 @@ namespace ApiMastery.Controllers
                     new Claim(JwtRegisteredClaimNames.Iat,DateTime.Now.ToUniversalTime().ToString())
                 }             
                 )),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.Add(_jwtConfig.ExpiryTime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
 
-            return jwtTokenHandler.WriteToken(token);
+            var jwtToken = jwtTokenHandler.WriteToken(token);
+
+            var refreshToken = new RefreshToken
+            {
+                JwtId = token.Id,
+                Token = RandomGenerator.GeneratorRandomString(23),
+                AddedDate = DateTime.UtcNow,
+                ExpriryDate = DateTime.UtcNow.AddMonths(6),
+                IsRevoked = false,
+                IsUsed = false,
+                UserId = user.Id
+            };
+
+            await _context.RefreshTokens.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return new AuthResult
+            {
+                Token = jwtToken,
+                RefreshToken = refreshToken.Token,
+                Result = true
+            };
         }
 
         private async Task SendVerificationEmail(IdentityUser user)
